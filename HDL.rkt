@@ -6,19 +6,25 @@
 ;;DATATYPES
 
 (define-type Chip
-	[IN  (in symbol?)]
-	[OUT (out symbol?)]
-	[PARTS (name Chip?)
-	       (args list?)]
- )
-
+  [IN  (in symbol?)]
+  [OUT (out symbol?)]
+  [PARTS (name Chip?)
+    (args list?)]
+)
 
 
 ;;PARSING
 
-;;parse : s-exp -> AST
-(define (parse sexp)
+;;first-is? : sexp -> sexp
+(define (first-is? sexp sym)
+  (equal? (first sexp) sym))
 
+
+;;parse : sexp -> AST
+(define (parse sexp)
+  (cond
+    [(symbol? sexp) (id sexp)]
+  
 )
 
 
