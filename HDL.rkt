@@ -6,11 +6,16 @@
 ;;DATATYPES
 
 (define-type Chip
-  [IN  (in symbol?)]
-  [OUT (out symbol?)]
-  [PARTS (name Chip?)
-    (args list?)]
+  [id    (id symbol?)]
+  [var   (var symbol?)]
+  [ins   (inputs symbol?)]
+  [outs  (out symbol?)]
+  [parts (name Chip?)
+         (args list?)]
+  [array (arr list?)]
 )
+
+
 
 
 ;;PARSING
@@ -23,7 +28,20 @@
 ;;parse : sexp -> AST
 (define (parse sexp)
   (cond
-    [(symbol? sexp) (id sexp)]
+    [(first-is? sexp 'CHIP)
+      (id (second sexp))
+      (parse rest sexp)]
+    [(symbol? (first sexp)
+      (cond
+        [(equal? (first sexp) 'IN)
+	  (ins )	//How to make it stop at colons???
+	  (parse (rest sexp)] 
+	[(equal? (first sexp) 'OUT)
+	  (outs ) 	//How to make it stop at colons???
+	  (parse (rest sexp)] 
+	[(equal? (first sexp) 'PARTS)
+	  (parts) 	//How to make it stop at colons???
+	  (parse (rest sexp)]
   
 )
 
