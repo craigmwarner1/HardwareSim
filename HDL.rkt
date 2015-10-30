@@ -5,17 +5,13 @@
 
 ;;DATATYPES
 
-(define-type Chip
-  [id    (id symbol?)]
-  [var   (var symbol?)]
-  [ins   (inputs symbol?)]
-  [outs  (out symbol?)]
+(define-type CHIP
+  [id    (sym symbol?)]
+  [in    (ins list?)]
+  [out   (outs list?)]
   [parts (name Chip?)
          (args list?)]
-  [array (arr list?)]
 )
-
-
 
 
 ;;PARSING
@@ -24,26 +20,22 @@
 (define (first-is? sexp sym)
   (equal? (first sexp) sym))
 
+;;first-is-one-of? : sexp '()
+;;for use with common/easily expressed Bool operations 
+(define (first-is-one-of? sexp ls)
+  (member (first sexp) ls))
+
 
 ;;parse : sexp -> AST
 (define (parse sexp)
   (cond
-    [(first-is? sexp 'CHIP)
-      (id (second sexp))
-      (parse rest sexp)]
-    [(symbol? (first sexp)
-      (cond
-        [(equal? (first sexp) 'IN)
-	  (ins )	//How to make it stop at colons???
-	  (parse (rest sexp)] 
-	[(equal? (first sexp) 'OUT)
-	  (outs ) 	//How to make it stop at colons???
-	  (parse (rest sexp)] 
-	[(equal? (first sexp) 'PARTS)
-	  (parts) 	//How to make it stop at colons???
-	  (parse (rest sexp)]
-  
+    [(symbol? sexp) (id sexp)]
 )
 
 
 ;;INTERPRETATION
+(define (interp ast)
+  (type-case Chip ast
+    [in (ins) 
+        (
+  

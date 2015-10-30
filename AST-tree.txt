@@ -1,0 +1,98 @@
+########################################################
+Textual representation of HDL abstract syntax tree:
+########################################################
+
+CHIP
+[
+	IN    [ a, b, ...],
+	OUT   [ out1, out2, ...],
+	Parts 
+	[ 
+		part1
+		[ 
+			"Name1",
+			Args [ a, b, ...]
+		],
+		
+		part2
+		[
+			"Name2",
+			Args [ a, b, ...]
+		],
+		
+		.
+		.
+		.
+	
+	]
+]
+
+########################################################
+PARSER GENERAL DESIGN FLOW:
+########################################################
+
+(cond
+	[(if is (first sexp) 'IN)
+	 (parse in-list)
+	 (parse (rest sexp))]
+	[(if is (first sexp) 'OUT)
+	 (parse out-list)
+	 (parse (rest sexp))]
+	[(if is (first sexp) 'Parts)
+	 (parse parts-list)
+	 (parse (rest sexp))]
+	[(if is (first sexp) 'Name)
+	 (parse name)
+	 (parse args-list)
+	 (parse (rest sexp))]
+	[(if is (first sexp) 'Args)
+	 (parse (all in args-list))
+	 (parse (rest sexp))]
+)
+
+########################################################
+STRUCTS
+########################################################
+
+(struct chip (ins outs parts))
+	# Defines a chip structure
+	# three attributes
+	#	- ins    -> list of bus/wire structs
+	#	- outs   -> list of bus/wire structs
+	#	- parts  -> list of part structs
+
+(struct wire (name))
+	# Defines wire structure to represent single bit inputs/outputs
+	# one attribute
+	#	- name   -> symbol
+
+(struct bus (name size))
+	# Defines bus structure to represent multi-bit inputs/outputs
+	# two attributes
+	#	- name   -> symbol
+	#	- size   -> int (bus width)
+
+(struct part (name connections built_in?))
+	# Defines part structure to represent other chips used to build current chip
+	# three attributes
+	#	- name        -> symbol
+	#	- connections -> list of connection structs
+	#	- built_in?   -> boolean  /*This may be used to identify chips preloaded into the working 
+					    environment to reduce reading out to other files.            */ 
+
+(struct connection (in out))
+	# Defines connection structure to represent connections to inputs/outputs of parts by external sources
+	# two attributes
+	#	- in  -> symbol  
+	#	- out -> symbol
+
+
+
+
+
+
+
+
+
+
+
