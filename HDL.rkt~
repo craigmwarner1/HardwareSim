@@ -5,7 +5,7 @@
 
 ;;STRUCTS
 
-(struct chip (ins outs parts)
+(struct chip (name ins outs parts)
   #:transparent)
 
 (struct wire (name)
@@ -27,7 +27,7 @@
   [id    (sym symbol?)]
   [in    (ins list?)]
   [out   (outs list?)]
-  [parts (name CHIP?)
+  [parts (name Chip?)
          (args list?)]
 )
 
@@ -48,46 +48,31 @@
 (define (parse chip)
   (cond
     [(first-is? chip 'CHIP)
-     (chip (parse (third chip))
-           (parse (fourth chip))
-           (parse (fifth chip)))]
+     (chip (second chip) (third chip) 
+           (fourth chip) (fifth chip))]
     [(first-is? chip 'IN)
-     (parse (second chip))
+     ;;QQ
      (parse (rest chip))]
     [(first-is? chip 'OUT)
-     (parse(second chip))
-     (parse (rest chip))]
+     ;;QQ
+     parse (rest chip)]
     [(first-is? chip 'Parts)
-     (parse (second chip))
+     ;;QQ
      (parse (rest chip))]
     [(symbol? chip)
      (cond
-       [(member '= (first chip))
-        (cond
-          [(member '|[| (first chip)) 
-           (connection ((bus (first chip)) (second chip)))]
-          [else
-           (connection ((wire (first chip)) (second chip)))])]
+       ;;QQ
+       [(member? '("[]") chip)
+        ;;QQ
+        (connection ((bus (first chip)) (second chip)))]
        [else
-         (cond
-           [
-            (bus (parse (first chip)) (parse (second chip)))
-            (parse (rest chip))]
-           [else
-             (wire (parse (first chip)) (parse (second chip)))
-             (parse (rest chip))])])]
-    [(first-is-one-of? chip '(And Or Xor ...))
-     (part 
-      (parse (first chip))
-      (parse (second chip))
-      (cond
-        [(boolean? (third chip))
-         (parse (third chip))
-         (parse (rest chip))]
-        [else
-         (parse (rest chip))]))
+        (connection ((wire (first chip)) (second chip)))]
      (parse (rest chip))]
-))
+    [(first-is-one-of? chip (ls existing gates))]
+    [
+     
+
+
 
 ;;INTERPRETATION
 (define (interp ast)
