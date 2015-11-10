@@ -22,7 +22,17 @@
 
 ;;DATATYPES
 
+(define (env? o) (list? o))
 
+
+(define-type HDL
+  [num  (n number?)]
+  [id   (sym symbol?)]
+  [wire (name id?)]
+  [bus  (name id?)
+        (size num?)]
+  [part (name id?)
+        (args list?)]
 ;;PARSING
 
 ;;first-is? : sexp -> sexp
@@ -43,12 +53,12 @@
   (cond
     [(first-is? sexp 'bus)
      (bus 
-      (parse (second sexp))
-      (parse (third sexp)))
-     (parse (rest sexp))]
+      (second sexp)
+      (third sexp))
+      (parse (rest sexp))]
     [(first-is? sexp 'wire)
      (wire
-      (parse (second sexp)))
+      (second sexp))
      (parse (rest sexp))]
     [(first-is-one-of? sexp '[IN OUT])
      (parse (second sexp))
@@ -69,3 +79,9 @@
       (parse (third sexp))
       (parse (fourth sexp))
       (parse (fifth sexp)))]))
+
+
+
+;;FILE INPUT
+
+(define chip-file (open-input-file "THING"))
